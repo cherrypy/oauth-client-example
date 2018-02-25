@@ -38,9 +38,17 @@ settings = collections.defaultdict(
 )
 
 
+class SocialUser:
+	def set_extra_data(self, extra_data):
+		vars(self).update(extra_data)
+
+
 class User(social_core.storage.UserMixin):
 	def get_social_auth(provider, uid):
-		return
+		user = SocialUser()
+		user.id = uid
+		user.user = None
+		return user
 
 	def username_max_length():
 		return
