@@ -38,16 +38,11 @@ settings = collections.defaultdict(
 )
 
 
-class SocialUser:
-	def set_extra_data(self, extra_data):
-		vars(self).update(extra_data)
-
-
 class User(social_core.storage.UserMixin):
 	def get_social_auth(provider, uid):
-		user = SocialUser()
+		user = User()
 		user.id = uid
-		user.user = None
+		user.user = user
 		return user
 
 	def username_max_length():
@@ -89,7 +84,8 @@ class Auth:
 	def complete(self, *args, **kwargs):
 		backend = self.get_backend()
 		user = getattr(cherrypy.request, 'user', None)
-		return do_complete(backend, self.do_login, user=user, *args, **kwargs)
+		user = do_complete(backend, self.do_login, user=user, *args, **kwargs)
+		return user.id
 
 	def disconnect(self, backend, association_id=None):
 		user = getattr(cherrypy.request, 'user', None)
